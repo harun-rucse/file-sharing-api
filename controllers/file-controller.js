@@ -27,8 +27,6 @@ const uploadFile = catchAsync(async (req, res, next) => {
  */
 const downloadFile = catchAsync(async (req, res, next) => {
   const { publicKey } = req.params;
-  if (!publicKey) return next(new AppError('PublicKey is required', 400));
-
   const fileStream = await fileAccess.getFile(publicKey);
 
   const mimeType = mime.lookup(fileStream?.path);
@@ -54,8 +52,6 @@ const downloadFile = catchAsync(async (req, res, next) => {
  */
 const deleteFile = catchAsync(async (req, res, next) => {
   const { privateKey } = req.params;
-  if (!privateKey) return next(new AppError('PrivateKey is required', 400));
-
   await fileAccess.deleteFile(privateKey);
 
   res.status(200).json({ message: 'File delete successfull' });
