@@ -1,9 +1,10 @@
 const mime = require('mime-types');
 const FileAccess = require('../services/file-service');
+const LocalFileStorage = require('../services/local-file-storage');
 const catchAsync = require('../utils/catch-async');
 const AppError = require('../utils/app-error');
 
-const fileAccess = new FileAccess(process.env.FOLDER);
+const fileAccess = new FileAccess(new LocalFileStorage());
 
 /**
  * @desc    Upload a new file
@@ -15,15 +16,15 @@ const uploadFile = catchAsync(async (req, res, next) => {
 
   const { publicKey, privateKey } = await fileAccess.uploadFile(req.file);
 
-  res.status(201).json({ publicKey, privateKey });
+  res.status(200).json({ publicKey, privateKey });
 });
 
 /**
- * @desc    Get a file by publicKey
+ * @desc    Download a single file by publicKey
  * @route   GET /api/files/:publicKey
  * @access  Public
  */
-const getFile = catchAsync(async (req, res, next) => {
+const downloadFile = catchAsync(async (req, res, next) => {
   const { publicKey } = req.params;
   if (!publicKey) return next(new AppError('PublicKey is required', 400));
 
@@ -56,11 +57,11 @@ const deleteFile = catchAsync(async (req, res, next) => {
 
   await fileAccess.deleteFile(privateKey);
 
-  res.status(201).json({ message: 'File delete successfull' });
+  res.status(200).json({ message: 'File delete successfull' });
 });
 
 module.exports = {
   uploadFile,
-  getFile,
+  downloadFile,
   deleteFile,
 };
