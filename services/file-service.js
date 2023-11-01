@@ -1,5 +1,6 @@
 const KeyService = require('./key-service');
 const AppError = require('../utils/app-error');
+const logger = require('../logger');
 
 class FileAccess {
   constructor(storageProvider) {
@@ -39,6 +40,20 @@ class FileAccess {
     } else {
       throw new AppError('File not found for the provided privateKey', 404);
     }
+  }
+
+  async cleanUpFiles() {
+    for (const privateKey in this.fileMapping) {
+      const fileMapping = this.fileMapping[privateKey];
+
+      try {
+        await this.storageProvider.deleteFile(fileMapping.filePath);
+      } catch (error) {
+        logger.error(`Error cleanup file: ${fileMapping.filePath}`, error);
+      }
+    }
+
+    this.fileMapping = {};
   }
 }
 

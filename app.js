@@ -2,10 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const fileRoutes = require('./routes/file-routes');
 const globalErrorHandler = require('./controllers/error-controller');
+const { rateLimiter } = require('./middlewares/rate-limiter');
 const AppError = require('./utils/app-error');
 
 const app = express();
 app.use(cors());
+app.use('/api', rateLimiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

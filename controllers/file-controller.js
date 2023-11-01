@@ -3,6 +3,7 @@ const FileAccess = require('../services/file-service');
 const LocalFileStorage = require('../services/local-file-storage');
 const catchAsync = require('../utils/catch-async');
 const AppError = require('../utils/app-error');
+const logger = require('../logger');
 
 const fileAccess = new FileAccess(new LocalFileStorage());
 
@@ -60,8 +61,17 @@ const deleteFile = catchAsync(async (req, res, next) => {
   res.status(200).json({ message: 'File delete successfull' });
 });
 
+/**
+ * @desc  Cleanup all files
+ */
+const cleanUpFiles = async () => {
+  await fileAccess.cleanUpFiles();
+  logger.info('Cleanup successfull!');
+};
+
 module.exports = {
   uploadFile,
   downloadFile,
   deleteFile,
+  cleanUpFiles,
 };
