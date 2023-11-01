@@ -16,7 +16,7 @@ A step by step series of examples that tell you how to get a development environ
 1. Clone the repository
 
 ```
-git clone https://github.com/harun-rucse/organic-farms.git
+git clone https://github.com/harun-rucse/file-sharing-api.git
 ```
 
 2. Copy the `.env.example` file and create two file named `.env.development` and `.env.production` in the root of this project.
